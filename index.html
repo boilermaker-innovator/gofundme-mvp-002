@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundraiser Teaser Creator - Dynamic Colors</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <style>
+        body { 
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f2ef;
+        }
+        .header {
+            background-color: #0077B5;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .form-container {
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.2);
+            flex: 1 1 500px;
+            margin-right: 20px;
+        }
+        .preview-container {
+            flex: 1 1 500px;
+        }
+        h1 { margin: 0; font-size: 24px; font-weight: 600; }
+        h2 { color: #0077B5; font-size: 20px; font-weight: 600; }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 16px;
+            padding: 8px;
+            border: 1px solid #0077B5;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .image-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .image-toggle input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 24px;
+            background-color: #0077B5;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        button:hover { background-color: #006097; }
+        .preview {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.2);
+        }
+        .tab-container {
+            display: flex;
+            background-color: #f3f2ef;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .tab {
+            padding: 12px 16px;
+            cursor: pointer;
+            background: #ffffff;
+            border: none;
+            margin-right: 2px;
+            border-radius: 4px 4px 0 0;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            color: #0077B5;
+        }
+        .tab.active {
+            background: #0077B5;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 16px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .content-split {
+            display: flex;
+            gap: 20px;
+        }
+        .content-image {
+            width: 40%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .content-text {
+            flex: 1;
+        }
+        .header-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .view-button {
+            display: block;
+            width: 90%;
+            margin: 20px auto;
+            padding: 12px;
+            text-align: center;
+            background-color: #0077B5;
+            color: white;
+            text-decoration: none;
+            border-radius: 24px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Fundraiser Teaser Creator</h1>
+    </div>
+    <div class="container">
+        <div class="form-container">
+            <h2>Create Your Fundraiser</h2>
+            <form id="teaserForm">
+                <input type="text" id="title" placeholder="Campaign Title" required>
+                <input type="text" id="organizer" placeholder="Organizer Name" required>
+                <input type="text" id="location" placeholder="Location" required>
+                <input type="url" id="headerImage" placeholder="Header Image URL" required>
+
+                <div class="image-toggle">
+                    <input type="checkbox" id="storyImageEnabled" checked>
+                    <label>Include Story Image</label>
+                </div>
+                <input type="url" id="storyImage" placeholder="Story Image URL">
+                <textarea id="story" placeholder="Story (one point per line)" required></textarea>
+
+                <div class="image-toggle">
+                    <input type="checkbox" id="impactImageEnabled" checked>
+                    <label>Include Impact Image</label>
+                </div>
+                <input type="url" id="impactImage" placeholder="Impact Image URL">
+                <textarea id="impact" placeholder="Impact (one point per line)" required></textarea>
+
+                <div class="image-toggle">
+                    <input type="checkbox" id="aboutImageEnabled" checked>
+                    <label>Include About Image</label>
+                </div>
+                <input type="url" id="aboutImage" placeholder="About Image URL">
+                <textarea id="about" placeholder="About (one point per line)" required></textarea>
+
+                <input type="url" id="campaignUrl" placeholder="Campaign URL" required>
+
+                <div class="button-container">
+                    <button type="submit">Update Preview</button>
+                    <button type="button" id="prefillBtn">Prefill Test Data</button>
+                </div>
+            </form>
+        </div>
+        <div class="preview-container">
+            <h2>Preview</h2>
+            <div id="preview" class="preview"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+        let rotationInterval;
+
+        const testData = {
+            title: "Support Frank's Family Farm",
+            organizer: "Frank Johnson",
+            location: "Rural Queensland, Australia",
+            headerImage: "https://i.ibb.co/N32GVgH/IMG-1693.jpg",
+            storyImage: "https://picsum.photos/seed/farm1/800/600",
+            story: "Fourth-generation family farm facing challenging times\nDrought conditions affecting crop yields\nEssential equipment needs urgent upgrades\nCommunity rallying to preserve local farming heritage",
+            impactImage: "https://picsum.photos/seed/farm2/800/600",
+            impact: "Help maintain local food production\nSupport sustainable farming practices\nPreserve agricultural heritage\nCreate rural employment opportunities",
+            aboutImage: "https://picsum.photos/seed/farm3/800/600",
+            about: "35 years of farming experience\nActive member of local agricultural community\nCommitted to sustainable farming practices\nSupporting next generation of farmers",
+            campaignUrl: "https://example.com/franks-farm"
+        };
+
+        function prefillData() {
+            Object.keys(testData).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.value = testData[key];
+                }
+            });
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const formData = {};
+            Object.keys(testData).forEach(key => {
+                formData[key] = document.getElementById(key).value;
+            });
+
+            const tabs = ['Story', 'Impact', 'About'];
+            
+            const previewHtml = `
+                <div class="teaser-header" id="teaserHeader">
+                    <img src="${formData.headerImage}" class="header-image" id="headerImgPreview" crossorigin="anonymous">
+                    <div style="padding: 20px;">
+                        <h2>${formData.title}</h2>
+                        <p>${formData.organizer}</p>
+                        <p>${formData.location}</p>
+                    </div>
+                </div>
+                <div class="tab-container">
+                    ${tabs.map((tab, index) => `
+                        <button class="tab ${index === currentTab ? 'active' : ''}" 
+                                onclick="switchTab(${index})">${tab}</button>
+                    `).join('')}
+                </div>
+                <div class="tab-contents">
+                    ${['story', 'impact', 'about'].map((section, index) => `
+                        <div class="tab-content ${index === currentTab ? 'active' : ''}">
+                            <div class="content-split">
+                                ${document.getElementById(`${section}ImageEnabled`).checked ? 
+                                    `<img src="${formData[`${section}Image`]}" class="content-image" alt="${section}">` : 
+                                    ''}
+                                <div class="content-text" style="${!document.getElementById(`${section}ImageEnabled`).checked ? 'width: 100%' : ''}">
+                                    ${formData[section].split('\n').map(point => `<p>${point}</p>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <a href="${formData.campaignUrl}" class="view-button" target="_blank">Support This Campaign</a>
+            `;
+
+            document.getElementById('preview').innerHTML = previewHtml;
+            initColorThief();
+            startRotation();
+        }
+
+        function switchTab(index) {
+            currentTab = index;
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.tab-content').forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+
+        function startRotation() {
+            clearInterval(rotationInterval);
+            rotationInterval = setInterval(() => {
+                const tabCount = document.querySelectorAll('.tab').length;
+                currentTab = (currentTab + 1) % tabCount;
+                switchTab(currentTab);
+            }, 5000);
+        }
+
+        function initColorThief() {
+            const img = document.getElementById('headerImgPreview');
+            img.addEventListener('load', function() {
+                try {
+                    const colorThief = new ColorThief();
+                    const color = colorThief.getColor(img);
+                    const mainColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                    document.getElementById('teaserHeader').style.backgroundColor = mainColor;
+                    document.querySelector('.view-button').style.backgroundColor = mainColor;
+                    document.querySelector('.tab.active').style.backgroundColor = mainColor;
+                } catch (error) {
+                    console.log('Color extraction failed, using default color');
+                }
+            });
+        }
+
+        document.getElementById('prefillBtn').addEventListener('click', prefillData);
+        document.getElementById('teaserForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            updatePreview();
+        });
+
+        // Initialize preview on load
+        updatePreview();
+    </script>
+</body>
+</html>
